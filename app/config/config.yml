@@ -5,6 +5,7 @@ imports:
 framework:
     #esi:             ~
     #translator:      { fallback: "%locale%" }
+    translator: ~
     secret:          "%secret%"
     router:
         resource: "%kernel.root_dir%/config/routing.yml"
@@ -25,6 +26,9 @@ framework:
 twig:
     debug:            "%kernel.debug%"
     strict_variables: "%kernel.debug%"
+    form:
+        resources:
+            - 'SdBaseBundle:Form:semantic_fields.html.twig'
 
 # Assetic Configuration
 assetic:
@@ -57,6 +61,16 @@ doctrine:
         auto_generate_proxy_classes: "%kernel.debug%"
         auto_mapping: true
 
+doctrine_mongodb:
+    connections:
+        default:
+            server: mongodb://localhost:27017
+            options: {}
+    default_database: "%mongo_dbname%"
+    document_managers:
+        default:
+            auto_mapping: true
+
 # Swiftmailer Configuration
 swiftmailer:
     transport: "%mailer_transport%"
@@ -64,3 +78,68 @@ swiftmailer:
     username:  "%mailer_user%"
     password:  "%mailer_password%"
     spool:     { type: memory }
+
+fos_user:
+    db_driver: mongodb # other valid values are 'mongodb', 'couchdb' and 'propel'
+    firewall_name: main
+    user_class: "Sd\UserBundle\Document\BaseUser"
+    registration:
+        form:
+#            type:     
+#            handler:  
+        confirmation:
+            enabled:    true
+
+sensio_framework_extra:
+    view:    { annotations: false }
+    router:  { annotations: true }
+    request: { converters: true }
+
+fos_rest:
+    allowed_methods_listener: true
+    serializer:
+        serialize_null: true
+    view:
+        formats:
+            rss: true
+            xml: false
+            json: true
+        templating_formats:
+            html: true
+        force_redirects:
+            html: true
+        failed_validation: HTTP_BAD_REQUEST
+        default_engine: twig
+        view_response_listener: 'force' 
+    routing_loader:
+        default_format: html #json
+#    query_fetch_listener: true
+#    format_listener: 
+#        rules:
+#            - { path: '^/', priorities: ['json', 'html', '*/*'], fallback_format: 'json', prefer_extension: true }
+    body_converter:
+        enabled: true
+    body_listener:
+        decoders:
+            json: fos_rest.decoder.json
+    access_denied_listener:
+        json: true
+
+jms_serializer:
+    metadata:
+        auto_detection: true
+    property_naming:
+        separator:  _
+        lower_case: true
+    visitors:
+        json:
+            options: 0
+
+services:
+    odm:
+        alias: doctrine.odm.mongodb.document_manager
+    doctrine_mongo_db_param_converter:
+        class: Sensio\Bundle\FrameworkExtraBundle\Request\ParamConverter\DoctrineParamConverter
+        arguments: [ @doctrine_mongodb ]
+        tags:
+            - { name: request.param_converter, converter: doctrine.odm }

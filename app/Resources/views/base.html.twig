@@ -1,13 +1,28 @@
 <!DOCTYPE html>
 <html>
-    <head>
-        <meta charset="UTF-8" />
-        <title>{% block title %}Welcome!{% endblock %}</title>
-        {% block stylesheets %}{% endblock %}
-        <link rel="icon" type="image/x-icon" href="{{ asset('favicon.ico') }}" />
-    </head>
-    <body>
-        {% block body %}{% endblock %}
-        {% block javascripts %}{% endblock %}
-    </body>
+<head>
+  <meta charset="UTF-8" />
+  <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
+  <title>{% block title %}Welcome!{% endblock %}</title>
+  {% block stylesheets %}{% endblock %}
+  <link rel="icon" type="image/x-icon" href="{{ asset('favicon.ico') }}" />
+  <link rel="stylesheet" type="text/css" href="/styles/semantic.css">
+  <link rel="stylesheet" type="text/css" href="/styles/base.css">
+</head>
+<body>
+  <nav class="ui menu">{% include '::auth.html.twig' %}</nav>
+  <div class="ui page grid messages">
+    <div class="column">
+      {% include '::messages.html.twig' %}
+    </div>
+  </div>
+
+  <div class="ui page grid">
+    {% block body %}{% block view %}{% endblock %}{% endblock %}
+  </div>
+
+{% block javascripts %}{% endblock %}
+
+</body>
 </html>

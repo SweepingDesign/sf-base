@@ -9,3 +9,15 @@
 /vendor/
 /bin/
 /composer.phar
+/.bowerrc
+/.buildpath
+/.project
+/.settings/
+/.travis.yml
+/app/SymfonyRequirements.php
+/app/cache/
+/app/logs/
+/bower.json
+/node_modules/
+/package.json
+/web/vendor/
